@@ -9,7 +9,8 @@ ENV PANDOC_TEMPLATES_VERSION=${PANDOC_TEMPLATES_VERSION:-1.18} \
 ## Attempts to get detect latest version, otherwise falls back to version given in $VER
 ## Symlink pandoc, pandoc-citeproc so they are available system-wide
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
+ && apt-get upgrade \
+ && apt-get install -y --no-install-recommends \
     file \
     git \
     libapparmor1 \
@@ -76,15 +77,15 @@ RUN apt-get update \
 
 # add packages for notebooks
 RUN install2.r --error \
-    evaluate \
-    formatR  \ 
-    highr   \
-    markdown \ 
+    evaluate  \
+    formatR   \
+    highr     \
+    markdown  \
     htmltools \
-    caTools  \
-    knitr   \
+    caTools   \
+    knitr     \
     base64enc \
-    rprojroot  \
+    rprojroot \
     rmarkdown
 
 COPY userconf.sh /etc/cont-init.d/userconf

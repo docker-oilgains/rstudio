@@ -86,7 +86,9 @@ RUN install2.r --error \
     knitr     \
     base64enc \
     rprojroot \
-    rmarkdown
+    rmarkdown \
+    ## for data science
+    e1071
 
 COPY userconf.sh /etc/cont-init.d/userconf
 

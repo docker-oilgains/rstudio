@@ -1,7 +1,7 @@
 FROM rocker/r-ver:latest
 
 ARG RSTUDIO_VERSION
-ARG PANDOC_TEMPLATES_VERSION 
+ARG PANDOC_TEMPLATES_VERSION
 ENV PANDOC_TEMPLATES_VERSION=${PANDOC_TEMPLATES_VERSION:-1.18} \
     PATH=/usr/lib/rstudio-server/bin:$PATH
 
@@ -9,6 +9,7 @@ ENV PANDOC_TEMPLATES_VERSION=${PANDOC_TEMPLATES_VERSION:-1.18} \
 ## Attempts to get detect latest version, otherwise falls back to version given in $VER
 ## Symlink pandoc, pandoc-citeproc so they are available system-wide
 RUN apt-get update \
+   ## upgrade helps with other DL packages installation. 1st dif with rocker/rstudio
  && apt-get upgrade \
  && apt-get install -y --no-install-recommends \
     file \
@@ -60,8 +61,8 @@ RUN apt-get update \
   ## Prevent rstudio from deciding to use /usr/bin/R if a user apt-get installs a package
   &&  echo 'rsession-which-r=/usr/local/bin/R' >> /etc/rstudio/rserver.conf \
   ## use more robust file locking to avoid errors when using shared volumes:
-  && echo 'lock-type=advisory' >> /etc/rstudio/file-locks \ 
-  ## configure git not to request password each time 
+  && echo 'lock-type=advisory' >> /etc/rstudio/file-locks \
+  ## configure git not to request password each time
   && git config --system credential.helper 'cache --timeout=3600' \
   && git config --system push.default simple \
   ## Set up S6 init system
@@ -75,7 +76,7 @@ RUN apt-get update \
            \n rstudio-server stop' \
            > /etc/services.d/rstudio/finish
 
-# add packages for notebooks
+# add packages for notebooks. 2nd difference with rocker/rstudio
 RUN install2.r --error \
     evaluate  \
     formatR   \
@@ -101,5 +102,3 @@ EXPOSE 8787
 VOLUME /home/rstudio/kitematic
 
 CMD ["/init"]
-
-
